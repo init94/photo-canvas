@@ -6,6 +6,7 @@
 </head>
 <body>
 	<canvas id="canvas" width="600" height="600" style="border:solid 1px;"></canvas>
+	<script src="blur_rect.js"></script>
 	<script>
 		let canvas = document.getElementById('canvas')
 		let ctx = canvas.getContext('2d');
@@ -15,19 +16,30 @@
 
 		let image = new Image();
 
+		image.crossOrigin = "Anonymous";
+
 		image.onload = function(){
 			// Image => this
-			console.log(this)
+			const scale = 2;
+			let ratio = this.height / this.width;
 
-			let scale = this.height / this.width
-			let height = canvas.height * scale
+			let height = canvas.height * ratio;
+			let width = canvas.width * scale;
 
-			let y = (canvas.height / 2) - (height / 2)
+			let yBigImage = (canvas.height / 2) - ((height * scale) / 2);
+			let xBigImage = (canvas.width / 2) - (width / 2); 
+			
+			ctx.drawImage(this,xBigImage,yBigImage,width,height * scale);
 
-			ctx.drawImage(this,0,y,canvas.width, height)
+			ctx._blurRect(0,0,canvas.width,canvas.height,1,2);
+
+			let y = (canvas.height / 2) - (height / 2);
+
+			ctx.drawImage(this,0,y,canvas.width,height);
+
 		}
 
-		image.src = 'just-chillin.jpg'
+		image.src = 'just-chillin.jpg';
 	</script>
 </body>
 </html>
